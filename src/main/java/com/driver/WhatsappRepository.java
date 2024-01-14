@@ -61,35 +61,55 @@ public class WhatsappRepository {
         return messageId;
     }
     public int sendMessage(Message message, User sender, Group group) throws Exception{
-
-        if(adminMap.containsKey(group)){
-            List<User> users = groupUserMap.get(group);
-            boolean found = false;
-            for(User user : users){
-                if(user.equals(sender)) {
-                    found = true;
-                    break;
-                }
-            }
-            if(found){
-                senderMap.put(message, sender);
-                if(groupUserMap.containsKey(group)){
-                    if(groupMessageMap.get(group)!= null){
-                        List<Message> messages = groupMessageMap.get(group);
-                        messages.add(message);
-                        groupMessageMap.put(group, messages);
-                        return messages.size();
-                    }else{
-                        List<Message> newMsg = groupMessageMap.get(group);
-                        newMsg.add(message);
-                        groupMessageMap.put(group, newMsg);
-                        newMsg.size();
-                    }
-                }
-            }
-            throw new Exception("You are not allowed to send message");
+        if (!groupUserMap.containsKey(group)){
+            throw new Exception("Group does not exist");
         }
-        throw new Exception("Group does not exist");
+        senderMap.put(message,sender);
+        List<User> list = new ArrayList<>(groupUserMap.get(group));
+        for(User user: list){
+            if(user.getMobile().equals(sender.getMobile())){
+                if(groupMessageMap.containsKey(group)){
+                    groupMessageMap.get(group).add(message);
+                    return  groupMessageMap.get(group).size();
+                }
+                else{
+                    List<Message> m = new ArrayList<>();
+                    m.add(message);
+                    groupMessageMap.put(group, m);
+                    return m.size();
+                }
+            }
+        }
+        throw new Exception("You are not allowed to send message");
+
+//        if(adminMap.containsKey(group)){
+//            List<User> users = groupUserMap.get(group);
+//            boolean found = false;
+//            for(User user : users){
+//                if(user.equals(sender)) {
+//                    found = true;
+//                    break;
+//                }
+//            }
+//            if(found){
+//                senderMap.put(message, sender);
+//                if(groupUserMap.containsKey(group)){
+//                    if(groupMessageMap.get(group)!= null){
+//                        List<Message> messages = groupMessageMap.get(group);
+//                        messages.add(message);
+//                        groupMessageMap.put(group, messages);
+//                        return messages.size();
+//                    }else{
+//                        List<Message> newMsg = groupMessageMap.get(group);
+//                        newMsg.add(message);
+//                        groupMessageMap.put(group, newMsg);
+//                        newMsg.size();
+//                    }
+//                }
+//            }
+//            throw new Exception("You are not allowed to send message");
+//        }
+//        tgithrow new Exception("Group does not exist");
 
     }
 
